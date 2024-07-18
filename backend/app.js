@@ -5,6 +5,8 @@ const authRoutes = require('./routes/authRoutes');
 const billingRoutes = require('./routes/billingRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const sequelize = require('./config/database');
+const seedSubscriptionTypes = require('./seeders/subscriptionTypesSeeder');
+const { clearOldPaymentHistory } = require('./controllers/paymentController');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -20,8 +22,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api', billingRoutes);
 app.use('/api/payment', paymentRoutes);
 
-sequelize.sync().then(() => {
+sequelize.sync().then(async () => {
+    await seedSubscriptionTypes();
     app.listen(port, () => {
         console.log(`Backend server running at ${backendUrl}:${port}`);
     });
+
+    clearOldPaymentHistory();
 });

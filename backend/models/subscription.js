@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./user');
+const SubscriptionType = require('./subscriptionType');
 
 const Subscription = sequelize.define('Subscription', {
     userId: {
@@ -12,15 +13,24 @@ const Subscription = sequelize.define('Subscription', {
         }
     },
     subscriptionType: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: SubscriptionType,
+            key: 'id'
+        }
     },
     writeOffDate: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: true
+    },
+    stripeSubscriptionId: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 });
 
 Subscription.belongsTo(User, { foreignKey: 'userId' });
+Subscription.belongsTo(SubscriptionType, { foreignKey: 'subscriptionType' });
 
 module.exports = Subscription;

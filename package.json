@@ -16,6 +16,7 @@
     "express": "^4.19.2",
     "mysql2": "^3.10.3",
     "sequelize": "^6.37.3",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "stripe": "^16.2.0"
   }
 }

@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const paymentController = require('../controllers/paymentController');
 
-router.post('/create-checkout-session', paymentController.createCheckoutSession);
+console.log(paymentController);
 
-router.get('/verify-payment', paymentController.verifyPayment);
+router.post('/create-checkout-session', paymentController.createCheckoutSession);
 
 router.post('/webhook', express.raw({ type: 'application/json' }), paymentController.handleWebhook);
 

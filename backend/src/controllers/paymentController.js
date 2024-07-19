@@ -9,7 +9,6 @@ const { Op } = require('sequelize');
 exports.createCheckoutSession = async (req, res) => {
     const { user_id, subscription_type } = req.body;
 
-    // Проверка наличия необходимых полей
     if (!user_id || !subscription_type) {
         return res.status(400).json({ status: 'error', message: 'user_id and subscription_type are required' });
     }
@@ -25,7 +24,6 @@ exports.createCheckoutSession = async (req, res) => {
             return res.status(404).json({ status: 'error', message: 'User not found' });
         }
 
-        // Создание сессии подписки
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'subscription',
@@ -100,7 +98,8 @@ exports.handleWebhook = async (req, res) => {
                 await PaymentHistory.create({
                     userId: subscription.userId,
                     debitingDate: new Date(),
-                    subscriptionType: subscription.subscriptionTypeId
+                    subscriptionType: subscription.subscriptionTypeId,
+                    amount: invoice.amount_paid / 100
                 });
             }
             break;
@@ -114,7 +113,7 @@ exports.handleWebhook = async (req, res) => {
     res.status(200).json({ received: true });
 };
 
-const clearOldPaymentHistory = async () => {
+exports.clearOldPaymentHistory = async () => {
     const twoMonthsAgo = new Date();
     twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
 
@@ -127,6 +126,3 @@ const clearOldPaymentHistory = async () => {
     });
 };
 
-setInterval(clearOldPaymentHistory, 24 * 60 * 60 * 1000);
-
-module.exports = { clearOldPaymentHistory };

@@ -2,9 +2,9 @@ const SubscriptionType = require('../models/subscriptionType');
 
 const seedSubscriptionTypes = async () => {
     const subscriptionTypes = [
-        { id: 1, name: 'Начальный', price: 1000 },
-        { id: 2, name: 'PRO', price: 3000 },
-        { id: 3, name: 'PRO+', price: 5000 }
+        { id: 1, name: 'Начальный', points: 1000, price: 500, },
+        { id: 2, name: 'PRO', points: 3000, price: 1000 },
+        { id: 3, name: 'PRO+', points: 5000, price: 2000 }
     ];
 
     for (const type of subscriptionTypes) {

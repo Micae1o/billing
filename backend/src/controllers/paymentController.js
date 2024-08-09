@@ -72,24 +72,33 @@ exports.handleWebhook = async (req, res) => {
             const subscription = await Subscription.findOne({ where: { stripeSubscriptionId: subscriptionId } });
 
             if (subscription) {
-                const points = (await subscription.getSubscriptionType()).points;
+                const subscriptionType = await subscription.getSubscriptionType();
                 const user = await User.findByPk(subscription.userId);
 
-                const lastWriteDown = await PaymentHistory.findOne({
-                    where: { userId: subscription.userId },
-                    order: [['debitingDate', 'DESC']]
-                });
+                const monthlyPoints = subscriptionType.points;
+                const maxAllowedPoints = monthlyPoints * 2; // Maximum is two current subscriptions
 
-                const twoMonthsAgo = new Date();
-                twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+                let newBalance = user.balance + monthlyPoints;
 
-                if (!lastWriteDown || lastWriteDown.debitingDate > twoMonthsAgo) {
-                    user.balance += points;
+                if (newBalance > maxAllowedPoints) {
+                    // If the balance exceeds the maximum allowed, we charge only up to the limit
+                    const pointsToAdd = maxAllowedPoints - user.balance;
+                    if (pointsToAdd > 0) {
+                        newBalance = user.balance + pointsToAdd;
+                    } else {
+                        newBalance = user.balance; // Do not award new points if the limit has already been reached
+                    }
+                }
+
+                const pointsAdded = newBalance - user.balance;
+
+                if (pointsAdded > 0) {
+                    user.balance = newBalance;
                     await user.save();
 
                     await PointsHistory.create({
                         userId: subscription.userId,
-                        change: points,
+                        change: pointsAdded,
                         type: 'subscription_payment',
                         date: new Date()
                     });
@@ -125,4 +134,3 @@ exports.clearOldPaymentHistory = async () => {
         }
     });
 };
-

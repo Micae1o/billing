@@ -10,6 +10,8 @@ const sequelize = require('./config/database');
 const seedSubscriptionTypes = require('./seeders/subscriptionTypesSeeder');
 const { clearOldPaymentHistory } = require('./controllers/paymentController');
 
+const validateToken = require('./middleware/validateToken');
+
 const app = express();
 const port = process.env.PORT || 4000;
 const backendUrl = process.env.BACKEND_URL || 'http://localhost';
@@ -26,6 +28,8 @@ app.use(bodyParser.json({
         req.rawBody = buf.toString();
     }
 }));
+
+app.use(validateToken);
 
 app.use('/api/auth', authRoutes);
 app.use('/api', billingRoutes);

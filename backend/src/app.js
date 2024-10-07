@@ -17,7 +17,7 @@ const port = process.env.PORT || 4000;
 const backendUrl = process.env.BACKEND_URL || 'http://localhost';
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3001',
     optionsSuccessStatus: 200
 };
 

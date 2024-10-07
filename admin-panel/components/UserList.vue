@@ -27,32 +27,25 @@ export default {
   data() {
     return {
       users: [],
-    }
+    };
   },
   async created() {
-    try {
-      const response = await this.$axios.get(
-        'http://127.0.0.1:4000/api/admin/users'
-      )
-      this.users = response.data.users
-    } catch (error) {
-      console.error('Error fetching users:', error)
-    }
+    await this.fetchUsers();
   },
   methods: {
     async fetchUsers() {
       try {
         const response = await this.$axios.get(
-          'http://127.0.0.1:4000/api/admin/users'
-        )
-        this.users = response.data.users
+          `${this.$config.public.apiUrl}/api/admin/users`
+        );
+        this.users = response.data.users;
       } catch (error) {
-        console.error('Error fetching users:', error)
+        console.error("Error fetching users:", error);
       }
     },
     selectUser(userId) {
-      this.$emit('select-user', userId)
+      this.$emit("select-user", userId);
     },
   },
-}
+};
 </script>

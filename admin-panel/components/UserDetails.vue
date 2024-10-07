@@ -53,68 +53,71 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
-  props: ['userId'],
+  props: ["userId"],
   data() {
     return {
       userDetails: null,
       points: 0,
-    }
+    };
   },
   async created() {
-    await this.fetchUserDetails()
+    await this.fetchUserDetails();
   },
   watch: {
-    userId: 'fetchUserDetails',
+    userId: "fetchUserDetails",
   },
   methods: {
     async fetchUserDetails() {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:4000/api/admin/user-details?user_id=${this.userId}`
-        )
-        this.userDetails = response.data
+          `${this.$config.public.apiUrl}/api/admin/user-details?user_id=${this.userId}`
+        );
+        this.userDetails = response.data;
       } catch (error) {
-        console.error('Error fetching user details:', error)
+        console.error("Error fetching user details:", error);
       }
     },
     async cancelSubscription() {
       try {
         await axios.post(
-          'http://127.0.0.1:4000/api/admin/cancel-subscription',
+          `${this.$config.public.apiUrl}/api/admin/cancel-subscription`,
           {
             user_id: this.userId,
           }
-        )
-        alert('Subscription canceled successfully')
-        await this.fetchUserDetails()
-        this.$emit('user-updated')
+        );
+        alert("Subscription canceled successfully");
+        await this.fetchUserDetails();
+        this.$emit("user-updated");
       } catch (error) {
-        console.error('Error canceling subscription:', error)
+        console.error("Error canceling subscription:", error);
       }
     },
     async updatePoints() {
       if (!this.points) {
-        alert('Please enter a valid number of points')
-        return
+        alert("Please enter a valid number of points");
+        return;
       }
       try {
-        await axios.post('http://127.0.0.1:4000/api/admin/update-points', {
-          user_id: this.userId,
-          points: this.points,
-        })
-        alert('Points updated successfully')
-        await this.fetchUserDetails()
-        this.$emit('user-updated')
+        await axios.post(
+          `${this.$config.public.apiUrl}/api/admin/update-points`,
+          {
+            user_id: this.userId,
+            points: this.points,
+          }
+        );
+        alert("Points updated successfully");
+        await this.fetchUserDetails();
+        this.$emit("user-updated");
       } catch (error) {
-        console.error('Error updating points:', error)
+        console.error("Error updating points:", error);
       }
     },
     formatPoints(points) {
-      return Math.sign(points) === 1 ? `+${points}` : points
+      return Math.sign(points) === 1 ? `+${points}` : points;
     },
   },
-}
+};
 </script>

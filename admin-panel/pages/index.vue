@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import UserList from '~/components/UserList.vue'
-import UserDetails from '~/components/UserDetails.vue'
+import UserList from "~/components/UserList.vue";
+import UserDetails from "~/components/UserDetails.vue";
 
 export default {
   components: {
@@ -22,15 +22,15 @@ export default {
   data() {
     return {
       selectedUser: null,
-    }
+    };
   },
   methods: {
     selectUser(userId) {
-      this.selectedUser = userId
+      this.selectedUser = userId;
     },
     updateUserList() {
-      this.$refs.userList.fetchUsers()
+      this.$refs.userList.fetchUsers();
     },
   },
-}
+};
 </script>

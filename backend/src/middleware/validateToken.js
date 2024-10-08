@@ -5,10 +5,10 @@ const agent = https.Agent({
     rejectUnauthorized: false
 });
 
-const username = process.env.BASIC_AUTH_USERNAME;
-const password = process.env.BASIC_AUTH_PASSWORD;
+// const username = process.env.BASIC_AUTH_USERNAME;
+// const password = process.env.BASIC_AUTH_PASSWORD;
 
-const credentials = Buffer.from(`${username}:${password}`).toString('base64');
+// const credentials = Buffer.from(`${username}:${password}`).toString('base64');
 
 const validateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -19,16 +19,16 @@ const validateToken = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        const response = await axios.post(`https://178.156.131.224:9000/api/auth/v1/resource/validation`, {
+        const response = await axios.post(`https://uvio.pro/api/auth/v1/resource/validation`, {
             token: token,
             url: "/api/auth/permissions",
             action: "GET"
         }, {
             headers: {
                 'Accept': 'application/json',
-                'Authorization': `Basic ${credentials}`
+                // 'Authorization': `Basic ${credentials}`
             },
-            httpsAgent: agent
+            // httpsAgent: agent
         })
 
         if (response.data.code === 200) {

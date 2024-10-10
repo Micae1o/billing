@@ -19,7 +19,7 @@ const validateToken = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        const response = await axios.post(`https://uvio.pro/api/auth/v1/resource/validation`, {
+        const response = await axios.post(`https://uvio.pro/api/auth/resource/validation`, {
             token: token,
             url: "/api/auth/permissions",
             action: "GET"
